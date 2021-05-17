@@ -87,12 +87,12 @@ public class AlgoritmoCYK {
     }
 
     public static String[][] implementarCYK(String[][] cykTable) {
-        // 1.Crear encabezado con palabra
+        // Crear encabezado con palabra
         for (int i = 0; i < cykTable[0].length; i++) {
             cykTable[0][i] = obtenerLetraEnIndice(cadena, i);
         }
 
-        // 2. Hacer producciones para símbolos terminaleses con longitud 1
+        // Hacer producciones para símbolos terminaleses con longitud 1
         for (int i = 0; i < cykTable[1].length; i++) {
             String[] combinacionesValidas = esProductor(new String[] { cykTable[0][i] });
             cykTable[1][i] = toString(combinacionesValidas);
@@ -101,7 +101,7 @@ public class AlgoritmoCYK {
             return cykTable;
         }
 
-        // 3. Hacer producciones para símbolos con longitud 2 o más
+        // Hacer producciones para símbolos con longitud 2
         for (int i = 0; i < cykTable[2].length; i++) {
             String[] downwards = cykTable[1][i].split("\\s");
             String[] diagonal = cykTable[1][i + 1].split("\\s");
@@ -120,8 +120,8 @@ public class AlgoritmoCYK {
                 for (int compareFrom = 1; compareFrom < i; compareFrom++) {
                     String[] downwards = cykTable[compareFrom][j].split("\\s");
                     String[] diagonal = cykTable[i - compareFrom][j + compareFrom].split("\\s");
-                    String[] combinations = obtenerCombinaciones(downwards, diagonal);
-                    String[] combinacionesValidas = esProductor(combinations);
+                    String[] todasCombinaciones = obtenerCombinaciones(downwards, diagonal);
+                    String[] combinacionesValidas = esProductor(todasCombinaciones);
                     if (cykTable[i][j].isEmpty()) {
                         cykTable[i][j] = toString(combinacionesValidas);
                     } else {
@@ -139,18 +139,18 @@ public class AlgoritmoCYK {
     }
 
     public static String[] esProductor(String[] toCheck) {    //este metodo agrega al hashmap las producciones validas de cada caracter
-        ArrayList<String> storage = new ArrayList<>();
+        ArrayList<String> tmp = new ArrayList<>();
         for (String s : gramatica.keySet()) {
             for (String current : toCheck) {
                 if (gramatica.get(s).contains(current)) {
-                    storage.add(s);
+                    tmp.add(s);
                 }
             }
         }
-        if (storage.size() == 0) {
+        if (tmp.size() == 0) {
             return new String[] {};
         }
-        return storage.toArray(new String[storage.size()]);
+        return tmp.toArray(new String[tmp.size()]);
     }
 
     public static String[] obtenerCombinaciones(String[] from, String[] to) {
@@ -206,7 +206,7 @@ public class AlgoritmoCYK {
 
         System.out.println();
 
-        // 4. Evaluar si si pertenece es decir si la ultima casilla de nuestro arreglo contiene nuestro simbolo inicial
+        // Evaluar si si pertenece es decir si la ultima casilla de nuestro arreglo contiene nuestro simbolo inicial
         if (tablaCYK[tablaCYK.length - 1][tablaCYK[tablaCYK.length - 1].length - 1].contains(s0)) {
             System.out.println("La cadena " + cadena + " SI es un elemento de la gramatica ingresada");
         } else {
