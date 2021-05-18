@@ -17,12 +17,12 @@ public class AlgoritmoCYK {
 
     public static boolean leerGramatica(String[] args) {
         Scanner sc;
-        String file = args[0];
+        String archivo = args[0];
 
         try {
-            sc = new Scanner(new File(file));
+            sc = new Scanner(new File(archivo));
         } catch (FileNotFoundException e) {
-            System.out.println("Error: File not found: " + file + "!");
+            System.out.println("Error: File not found: " + archivo + "!");
             System.exit(1);
             return false;
         }
@@ -103,8 +103,8 @@ public class AlgoritmoCYK {
 
         // Hacer producciones para símbolos con longitud 2
         for (int i = 0; i < cykTable[2].length; i++) {
-            String[] downwards = cykTable[1][i].split("\\s");
             String[] diagonal = cykTable[1][i + 1].split("\\s");
+            String[] downwards = cykTable[1][i].split("\\s");
             String[] combinacionesValidas = esProductor(obtenerCombinaciones(downwards, diagonal));
             cykTable[2][i] = toString(combinacionesValidas);
         }
@@ -118,17 +118,17 @@ public class AlgoritmoCYK {
         for (int i = 3; i < cykTable.length; i++) {
             for (int j = 0; j < cykTable[i].length; j++) {
                 for (int compareFrom = 1; compareFrom < i; compareFrom++) {
-                    String[] downwards = cykTable[compareFrom][j].split("\\s");
                     String[] diagonal = cykTable[i - compareFrom][j + compareFrom].split("\\s");
+                    String[] downwards = cykTable[compareFrom][j].split("\\s");
                     String[] todasCombinaciones = obtenerCombinaciones(downwards, diagonal);
                     String[] combinacionesValidas = esProductor(todasCombinaciones);
                     if (cykTable[i][j].isEmpty()) {
                         cykTable[i][j] = toString(combinacionesValidas);
                     } else {
-                        String[] oldValues = cykTable[i][j].split("\\s");
-                        ArrayList<String> newValues = new ArrayList<String>(Arrays.asList(oldValues));
-                        newValues.addAll(Arrays.asList(combinacionesValidas));
-                        currentValues.addAll(newValues);
+                        String[] valoresAntiguos = cykTable[i][j].split("\\s");
+                        ArrayList<String> valoresNuevos = new ArrayList<String>(Arrays.asList(valoresAntiguos));
+                        valoresNuevos.addAll(Arrays.asList(combinacionesValidas));
+                        currentValues.addAll(valoresNuevos);
                         cykTable[i][j] = toString(currentValues.toArray(new String[currentValues.size()]));
                     }
                 }
@@ -174,6 +174,7 @@ public class AlgoritmoCYK {
         System.out.println();
         System.out.println("Palabra: " + cadena);
         System.out.println();
+        System.out.println("Definicion formal de la gramatica:");
         System.out.println("G = (" + terminales.toString() + ", " + noTerminales.toString()+ ", P, " + s0 + ")");
         System.out.println();
         System.out.println("Producciones P:");
